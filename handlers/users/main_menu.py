@@ -40,7 +40,7 @@ async def schedule_today(message: Message):
 
 
 @dp.message_handler(text="Завтра")
-async def shedule_tomorrow(message: Message):
+async def schedule_tomorrow(message: Message):
     pass
 
 

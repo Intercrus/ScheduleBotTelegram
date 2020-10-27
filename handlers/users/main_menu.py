@@ -87,10 +87,10 @@ async def shedule_today(message: Message):
     for key in dict_of_shedule:
         if int(data_today.day) == int(key):
             spreadsheets_id = dict_of_shedule[key][39:83]
-        # elif not (int(data_today.day) in dict_of_shedule):
-        #     spreadsheets_id = dict_of_shedule[key][39:83]
-            # print("Сегодня выходной")
-            # break
+        elif not (int(data_today.day) in dict_of_shedule):
+            spreadsheets_id = dict_of_shedule[key][39:83]
+            print("Сегодня выходной")
+            break
 
     CREDENTIALS_FILE = "/home/alien/PycharmProjects/ScheduleBotTelegram/handlers/users/CDED12.json"
 
@@ -108,7 +108,36 @@ async def shedule_today(message: Message):
         range="A1:N24",
         majorDimension="COLUMNS"
     ).execute()
-    print(values)
+    # print(values)
+
+    for key in values:
+        mas_of_data = values[key]
+
+    data_of_values_today = mas_of_data[0][0]
+
+    vrem_perem_of_data = mas_of_data[-1]
+    vrem_perem_of_data2 = mas_of_data[0]
+    mas_of_data.remove(vrem_perem_of_data)
+    mas_of_data.remove(vrem_perem_of_data2)
+
+    pattern_of_group = r"^2...."
+
+    # print(mas_of_data)
+    # print("\n")
+    joined_mas_of_data = '\n'.join(','.join(map(str, row)) for row in mas_of_data)
+    # print(joined_mas_of_data)
+    print(joined_mas_of_data)
+    pattern = re.search(pattern_of_group, joined_mas_of_data)
+
+    for val in mas_of_data:
+        pass
+        # print(val[0])
+        # print(val[8])
+        # print(val[16])
+
+    # print(' '.join(map(str, mas_of_data[0])))
+
+    exit()
 
 
 @dp.message_handler(text="Завтра")

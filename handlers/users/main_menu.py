@@ -87,10 +87,6 @@ async def shedule_today(message: Message):
     for key in dict_of_shedule:
         if int(data_today.day) == int(key):
             spreadsheets_id = dict_of_shedule[key][39:83]
-        elif not (int(data_today.day) in dict_of_shedule):
-            spreadsheets_id = dict_of_shedule[key][39:83]
-            print("Сегодня выходной")
-            break
 
     CREDENTIALS_FILE = "/home/alien/PycharmProjects/ScheduleBotTelegram/handlers/users/CDED12.json"
 
@@ -107,35 +103,35 @@ async def shedule_today(message: Message):
         spreadsheetId=spreadsheets_id,
         range="A1:N24",
         majorDimension="COLUMNS"
-    ).execute()
-    # print(values)
+    ).execute()  # Main data from google sheets
+    # Parsing is finished, need to get the values
 
-    for key in values:
-        mas_of_data = values[key]
-
-    data_of_values_today = mas_of_data[0][0]
-
-    vrem_perem_of_data = mas_of_data[-1]
-    vrem_perem_of_data2 = mas_of_data[0]
-    mas_of_data.remove(vrem_perem_of_data)
-    mas_of_data.remove(vrem_perem_of_data2)
-
-    pattern_of_group = r"^2...."
-
+    # for key in values:  # Removing unneeded keys
+    #     mas_of_data = values[key]
     # print(mas_of_data)
-    # print("\n")
-    joined_mas_of_data = '\n'.join(','.join(map(str, row)) for row in mas_of_data)
+    #
+    # data_of_values_today = mas_of_data[0][0]
+
+    # Removed the last and first element because it throws an error when iterating over the array
+    # remove_the_last_item = mas_of_data[-1]
+    # remove_the_first_item = mas_of_data[0]
+    # mas_of_data.remove(remove_the_last_item)
+    # mas_of_data.remove(remove_the_first_item)
+
+    # joined_mas_of_data = '\n'.join(','.join(map(str, row)) for row in mas_of_data)
     # print(joined_mas_of_data)
-    print(joined_mas_of_data)
-    pattern = re.search(pattern_of_group, joined_mas_of_data)
 
-    for val in mas_of_data:
-        pass
-        # print(val[0])
-        # print(val[8])
-        # print(val[16])
+    # pattern_group = f"{message.text}"
+    #
+    # for val in mas_of_data:
+    #     if re.match(pattern_group, mas_of_data):
+    #         print()
 
-    # print(' '.join(map(str, mas_of_data[0])))
+    # for val in mas_of_data:
+    #     pass
+    #     # print(val[0])
+    #     # print(val[8])
+    #     # print(val[16])
 
     exit()
 

@@ -13,9 +13,9 @@ async def accept_groups(message: Message, state: FSMContext):
                          reply_markup=ReplyKeyboardRemove())
 
     await message.answer(f"Введите название вашей группы, скопировав из списка\n"
-                         "Например 2ГУ")
+                         "Например 2ИС-2")
 
-    file_name_group = open('/home/alien/PycharmProjects/SheduleBotTelegram/handlers/users/name_groups')
+    file_name_group = open('/home/alien/PycharmProjects/ScheduleBotTelegram/handlers/users/name_groups')
     await bot.send_document(chat_id=message.chat.id, document=file_name_group)
     file_name_group.close()
 
@@ -27,7 +27,7 @@ async def search_groups(message: Message, state: FSMContext):
     # await message.answer(f"main_menu state. welcome ~/")
     await message.answer(message.text)
     data_file = []
-    with open("/home/alien/PycharmProjects/SheduleBotTelegram/handlers/users/name_groups", 'r') as read_file:
+    with open("/home/alien/PycharmProjects/ScheduleBotTelegram/handlers/users/name_groups", 'r') as read_file:
         for line in read_file:
             data_file.append(line.strip('\n'))
     none_list = []

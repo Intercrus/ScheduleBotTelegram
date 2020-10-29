@@ -42,7 +42,7 @@ async def search_groups(message: Message, state: FSMContext):
                              f"Выберите пункт, который вам интересен",
                              reply_markup=main_menu)
         await StatesOfBot.search_groups_state.set()
-        await state.finish()
+        await state.update_data(group_name=message.text)
     else:
         await message.answer(f"Группа {message.text} не найдена\n"
                              "Повторите попытку")

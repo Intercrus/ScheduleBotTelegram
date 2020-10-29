@@ -4,3 +4,5 @@ logging.basicConfig(format=u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(
                     level=logging.INFO,
                     # level=logging.DEBUG,
                     )
+
+logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.CRITICAL)

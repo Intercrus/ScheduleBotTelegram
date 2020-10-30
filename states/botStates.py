@@ -5,4 +5,4 @@ class StatesOfBot(StatesGroup):
     start_state = State()
     who_you_are_state = State()
     search_groups_state = State()
-    main_menu_state = State()
+    parser_state= State()

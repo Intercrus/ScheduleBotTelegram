@@ -6,7 +6,7 @@ who_you_are = ReplyKeyboardMarkup(
             KeyboardButton(text="Студент")
         ],
         [
-            KeyboardButton(text="Преподаватель")
+            KeyboardButton(text="Преподаватель (в разработке)")
         ]
     ],
     resize_keyboard=True

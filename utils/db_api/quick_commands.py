@@ -4,9 +4,9 @@ from utils.db_api.db_gino import db
 from utils.db_api.schemas.user import User
 
 
-async def add_user(id: int, name: str, email: str = None):
+async def add_user(id: int, name: str, name_group: str = None, email: str = None):
     try:
-        user = User(id=id, name=name, email=email)
+        user = User(id=id, name=name, name_group=name_group, email=email)
         await user.create()
 
     except UniqueViolationError:  # Если два уникальных ключа
@@ -26,6 +26,11 @@ async def select_user(id: int):
 async def count_users():
     total = await db.func.count(User.id).gino.scalar()
     return total
+
+
+async def update_user_name_group(id, name_group):
+    user = await User.get(id)
+    await user.update(name_group=name_group).apply()
 
 
 async def update_user_email(id, email):

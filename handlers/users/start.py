@@ -12,12 +12,8 @@ from states.botStates import StatesOfBot
 @dp.message_handler(CommandStart(), state=None)
 async def bot_start(message: types.Message, state: FSMContext):
     name = message.from_user.full_name
-
-    try:
-        await commands.add_user(id=message.from_user.id,
-                                name=name)
-    except asyncpg.exceptions.UniqueViolationError:
-        pass
+    await commands.add_user(id=message.from_user.id,
+                            name=name)
 
     # count = await commands.count_users()
 

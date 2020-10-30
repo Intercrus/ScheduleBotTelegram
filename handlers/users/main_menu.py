@@ -19,15 +19,16 @@ from keyboards.inline.setup_button_inline import setup_button
 from keyboards.inline.setup_callback import *
 from keyboards.inline.search_button_inline import *
 from keyboards.inline.search_callback import *
+from utils.db_api import quick_commands as commands
 
 
-@dp.message_handler(text="Настройки")
+@dp.message_handler(text="Настройки (в разработке)", state=StatesOfBot.search_groups_state)
 async def setup_keyboard(message: Message):
     await message.answer(f"Выберите то, что нужно настроить",
                          reply_markup=setup_button)
 
 
-@dp.message_handler(text="Поиск")
+@dp.message_handler(text="Поиск (в разработке)", state=StatesOfBot.search_groups_state)
 async def search_keyboard(message: Message):
     await message.answer(f"Выберите то, что нужно найти",
                          reply_markup=search_button)
@@ -145,8 +146,6 @@ async def shedule_today(message: Message, state: FSMContext):
 
     await find_timetable(mas_of_data, group_name)
 
-    exit()
-
 
 @dp.message_handler(text="Завтра", state=StatesOfBot.search_groups_state)
 async def shedule_tomorrow(message: Message, state: FSMContext):
@@ -201,7 +200,7 @@ async def shedule_tomorrow(message: Message, state: FSMContext):
     spreadsheets_id = ""
 
     for key in dict_of_shedule:
-        if (int(data_today.day)+1) == int(key):
+        if (int(data_today.day) + 1) == int(key):
             spreadsheets_id = dict_of_shedule[key][39:83]
 
     CREDENTIALS_FILE = "/home/alien/PycharmProjects/ScheduleBotTelegram/handlers/users/CDED12.json"
@@ -243,7 +242,7 @@ async def shedule_tomorrow(message: Message, state: FSMContext):
     async def find_timetable(data, value):
         for i in range(len(data)):
             try:
-                idx = data[i].index(value)
+                idx = data[i].index(value)  # Индекс группы
                 new_data = []
 
                 for j in range(idx + 1, len(data[i])):
@@ -268,12 +267,4 @@ async def get_ad(call: CallbackQuery):
                              chat_id=call.message.chat.id)
     await call.message.answer("Подробности @scytheofdeath")
 
-# @dp.message_handler(state=StatesOfBot.search_groups_state)
-# async def main_menu(message: Message, state: FSMContext):
-#     pass
-#
-#
-#     await message.answer(f"setup",
-#                      reply_markup=setup_button)
-#
-#     await StatesOfBot.main_menu_state.set()
+

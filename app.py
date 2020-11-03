@@ -14,11 +14,6 @@ async def on_startup(dp):
     await db_gino.on_startup(dp)
     print("Готово")
 
-    # print("Чистим базу")
-    # await db.StatesOfBot.search_groups_stategino.drop_all()
-    #
-    # print("Готово")
-
     print("Создаем таблицы")
     await db.gino.create_all()
 

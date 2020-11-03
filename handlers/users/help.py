@@ -9,6 +9,7 @@ from utils.misc import rate_limit
 @dp.message_handler(CommandHelp())
 async def bot_help(message: types.Message):
     text = [
+        'Данный бот отправляет расписание Петрозаводского кооперативного техникума\n'
         'Список команд: ',
         '/start - Начать диалог',
         '/help - Получить справку'

@@ -9,48 +9,34 @@ from keyboards.inline import setup_button_inline, setup_callback
 from utils.db_api import quick_commands as commands
 
 
-@dp.message_handler(Text(equals=["Студент", "Преподаватель"]), state=StatesOfBot.start_state)
-async def accept_groups(message: Message, state: FSMContext):
-    # await message.answer(f"Вы {message.text}. Переходите к следующему пункту",
-    #                      reply_markup=ReplyKeyboardRemove())
-
-    await message.answer(f"Введите название вашей группы, скопировав из списка\n"
-                         "Например 2ИС-2", reply_markup=ReplyKeyboardRemove())
-
-    file_name_group = open('handlers/users/name_groups.txt')
-    await bot.send_document(chat_id=message.chat.id, document=file_name_group)
-    file_name_group.close()
-
-    await StatesOfBot.who_you_are_state.set()
-
-
-@dp.message_handler(state=StatesOfBot.who_you_are_state)
+@dp.message_handler(state=StatesOfBot.start_state)
 async def search_groups(message: Message, state: FSMContext):
-    # await message.answer(f"main_menu state. welcome ~/")
-    await message.answer(message.text)
-    data_file = []
-    with open("handlers/users/name_groups.txt", 'r') as read_file:
+    data_file, none_list, acc_list = [], [], []
+
+    with open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt", 'r') as read_file:
         for line in read_file:
             data_file.append(line.strip('\n'))
-    none_list = []
-    acc_list = []
 
     for line in data_file:
         if message.text == line:
             acc_list.append(line)
         else:
             none_list.append(line)
+
     if acc_list:
-        await message.answer(f"Группа {message.text} успешно найдена."
+        await message.answer(f"Группа {message.text} успешно найдена.\n"
+                             f"\n"
+                             f"Бот находится в разработке, поэтому большинство функций на данный момент недоступно.\n"
+                             f"\n"
                              f"Выберите пункт, который вам интересен",
                              reply_markup=main_menu)
 
         await commands.update_user_name_group(name_group=message.text,
                                               id=message.from_user.id)
 
-        await state.update_data(group_name=message.text)
         await StatesOfBot.search_groups_state.set()
+        await state.finish()
     else:
         await message.answer(f"Группа {message.text} не найдена\n"
                              "Повторите попытку")
-        await StatesOfBot.who_you_are_state.set()
+        await StatesOfBot.start_state.set()

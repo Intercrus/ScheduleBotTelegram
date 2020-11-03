@@ -4,7 +4,7 @@ from keyboards.inline.setup_callback import setup_callback
 setup_button = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text="Подписаться на расписание",
-                             callback_data=setup_callback.new(action_name="sub_on_shedule")),
+                             callback_data=setup_callback.new(action_name="sub_on_schedule")),
     ],
     [
         InlineKeyboardButton(text="Место для рекламы",

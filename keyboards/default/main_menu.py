@@ -7,10 +7,10 @@ main_menu = ReplyKeyboardMarkup(
             KeyboardButton(text="Завтра")
         ],
         [
-            KeyboardButton(text="Поиск (в разработке)"),
+            KeyboardButton(text="Поиск"),
         ],
         [
-            KeyboardButton(text="Настройки (в разработке)")
+            KeyboardButton(text="Настройки")
         ]
     ],
     resize_keyboard=True

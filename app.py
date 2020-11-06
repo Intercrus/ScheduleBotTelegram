@@ -1,6 +1,8 @@
+import asyncio
 from utils.set_bot_commands import set_default_commands
 from loader import db
 from utils.db_api import db_gino
+from utils.scheduler import scheduler
 
 
 async def on_startup(dp):
@@ -20,6 +22,9 @@ async def on_startup(dp):
     print("Готово")
     await on_startup_notify(dp)
     await set_default_commands(dp)
+
+    asyncio.create_task(scheduler())
+    print("Планировщик запущен")
 
 
 if __name__ == '__main__':

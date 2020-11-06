@@ -13,12 +13,12 @@ async def command_start(message: types.Message, state: FSMContext):
     name = message.from_user.full_name
     await commands.add_user(id=message.from_user.id,
                             name=name)
-
+    print(message.chat.id)
     await message.answer(f'Здравствуйте, {message.from_user.full_name}!\n'
                          f'Введите название вашей группы, скопировав из списка\n'
                          f'Например: 2ИС-2', reply_markup=ReplyKeyboardRemove())
 
-    file_name_group = open('/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt')
+    file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt")
     await bot.send_document(chat_id=message.chat.id, document=file_name_group)
     file_name_group.close()
 

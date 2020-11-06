@@ -7,6 +7,9 @@ main_menu = ReplyKeyboardMarkup(
             KeyboardButton(text="Завтра")
         ],
         [
+            KeyboardButton(text="Неделя"),
+        ],
+        [
             KeyboardButton(text="Поиск"),
         ],
         [

@@ -1,5 +1,8 @@
-from datetime import date, datetime
+import retrying
+from datetime import date, datetime, timedelta
 from aiogram.types import Message, CallbackQuery
+from googleapiclient.errors import HttpError
+
 from loader import dp, bot
 from keyboards.inline.search_button_inline import *
 from aiogram.dispatcher import FSMContext
@@ -19,12 +22,13 @@ async def schedule_for_a_specific_day(call: CallbackQuery):
     await call.answer(cache_time=60)
     await bot.delete_message(message_id=call.message.message_id,
                              chat_id=call.message.chat.id)
-    await call.message.answer('Укажите дату, на которую нужно найти расписание. \nНапример: 2020-11-06 (год-месяц-день)')
+    await call.message.answer('Укажите дату, на которую нужно найти расписание. '
+                              '\nНапример: 2020-11-06 (год-месяц-день)')
     await StatesOfBot.search_by_spec_day.set()
 
 
 @dp.message_handler(state=StatesOfBot.search_by_spec_day)
-async def search_timetable_by_spec_day(message: Message, state: FSMContext):
+async def search_timetable_by_specific_day(message: Message, state: FSMContext):
     user = await commands.select_user(id=message.from_user.id)
     group_name = user.name_group
     data_today = datetime.strptime(message.text, "%Y-%m-%d")

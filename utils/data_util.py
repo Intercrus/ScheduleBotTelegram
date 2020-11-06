@@ -86,7 +86,7 @@ async def get_data_from_google(target_date):
     return mas_of_data
 
 
-# Находит раписание по имени группы
+# Находит расписание по имени группы
 async def find_timetable_by_group(data, value):
     for i in range(len(data)):
         try:
@@ -105,8 +105,9 @@ async def find_timetable_by_group(data, value):
             continue
 
 
-# Находит раписание по имени препода
+# Находит расписание по имени препода
 async def find_timetable_by_teacher(data, value):
+    global lesson, cabinet
     out_data = []
     for item in data:
         for i in range(len(item)):
@@ -125,7 +126,7 @@ async def find_timetable_by_teacher(data, value):
 
                     else:
                         cabinet = ''
-                        if result[2].find(value) > -1 and result[2].find(value) <= 5:
+                        if -1 < result[2].find(value) <= 5:  # result[2].find(value) > -1 and result[2].find(value) <= 5
                             cabinet = result[1].split('/')[0]
                         if result[2].find(value) > -1 and result[2].find(value) >= 5:
                             cabinet = result[1].split('/')[1]
@@ -139,14 +140,14 @@ async def find_timetable_by_teacher(data, value):
                         new_str = result[0].replace(pattern, '')
 
                         src = new_str.split('/')
-                        if result[1].find(value) > -1 and result[1].find(value) <= 5:
+                        if -1 < result[1].find(value) <= 5:  # result[1].find(value) > -1 and result[1].find(value) <= 5
                             lesson = src[0]
                             cabinet = cabs[0]
                         if result[1].find(value) > -1 and result[1].find(value) >= 5:
                             lesson = src[1]
                             cabinet = cabs[1]
 
-                        out_data.append([lesson, cabinet])
+                        out_data.append([lesson, cabinet])  # global
                     else:
                         out_data.append([result[0]])
 

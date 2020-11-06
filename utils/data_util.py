@@ -53,7 +53,6 @@ async def get_data_from_google(target_date):
     del dict_of_schedule["Расписание сессии"]
 
     spreadsheets_id = ""
-
     for key in dict_of_schedule:
         if int(target_date.day) == int(key):
             spreadsheets_id = dict_of_schedule[key][39:83]

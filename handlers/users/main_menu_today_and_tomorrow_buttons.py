@@ -18,8 +18,9 @@ async def schedule_today(message: Message):
     user = await commands.select_user(id=message.from_user.id)
     group_name = user.name_group
     data_today = date.today()
-
+    print(data_today)
     data = await get_data_from_google(data_today)
+    print(data)
     timetable = await find_timetable_by_group(data, group_name)
 
     await message.answer(data[0][0])

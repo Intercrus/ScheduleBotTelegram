@@ -21,15 +21,15 @@ async def subscribe_to_the_schedule(call: CallbackQuery):
                              chat_id=call.message.chat.id)
     await call.message.answer('Укажите время, в которое хотите получать расписание. '
                               'Например, "12:45"')
-    await StatesOfBot.shedule_state.set()
+    await StatesOfBot.schedule_state.set()
 
 
-@dp.message_handler(state=StatesOfBot.shedule_state)
+@dp.message_handler(state=StatesOfBot.schedule_state)
 async def set_subscribe(message: Message, state: FSMContext):
     if re.match(r'^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$', message.text):
         await message.answer(f"Время получения расписания установлено на: {message.text}")
         await commands.update_user_mailing_time(mailing_time=message.text,
-                                              id=message.from_user.id)
+                                                id=message.from_user.id)
         await state.finish()
     else:
         await message.answer(f"Указано некорректное время. Попробуйте еще раз.")
@@ -50,10 +50,10 @@ async def reset_settings(call: CallbackQuery, state: FSMContext):
                              chat_id=call.message.chat.id)
     await call.message.answer("Настройки группы и подписки сброшены")
     await call.message.answer(f'Здравствуйте, {call.message.chat.full_name}!\n'
-                         f'Введите название вашей группы, скопировав из списка\n'
-                         f'Например: 2ИС-2', reply_markup=ReplyKeyboardRemove())
+                              f'Введите название вашей группы, скопировав из списка\n'
+                              f'Например: 2ИС-2', reply_markup=ReplyKeyboardRemove())
 
-    file_name_group = open('/Users/aleksandregorov/Desktop/Projects/Python/ScheduleBotTelegram/data/name_groups.txt')
+    file_name_group = open('/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt')
     await bot.send_document(chat_id=call.message.chat.id, document=file_name_group)
     file_name_group.close()
 

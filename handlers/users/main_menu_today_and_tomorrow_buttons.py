@@ -35,15 +35,19 @@ async def schedule_today(message: Message):
         reformat_timetable = timetable.split("\n")
         print(reformat_timetable)
 
+        await message.answer(f"📅 {reformat_data.title()}\n\n")
+
         for i in reformat_timetable:
             teacher = re.search(r"...................\s[А-Я][А-Я]", i)
             reformat_teacher = teacher.group(0)
             lesson = re.search(r"[0-9].[А-Я].................\s\s\s", i)
             reformat_lesson = lesson.group(0)[2:]
-            await message.answer(reformat_teacher)
-            await message.answer(reformat_lesson)
-
-        await message.answer(f"📅 {reformat_data.title()}\n----------------\n{timetable}")
+            cabinet = re.search(r"\s\s\s\d\d", i)
+            reformat_cabinet = cabinet.group(0)
+            await message.answer(
+                f"📖{reformat_lesson.lstrip()}\n"
+                f"🚪{reformat_cabinet.lstrip()}\n"
+                f"👤{reformat_teacher.lstrip()}\n")
 
     except HttpError:
         name_day = data_today.strftime("%A")

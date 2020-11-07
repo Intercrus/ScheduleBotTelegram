@@ -23,17 +23,25 @@ async def schedule_today(message: Message):
     global data
     user = await commands.select_user(id=message.from_user.id)
     group_name = user.name_group
-    data_today = date.today()
+    data_today = date.today() + timedelta(days=3)
 
     try:
         data = await get_data_from_google(data_today)
         timetable = await find_timetable_by_group(data, group_name)
         reformat_data = re.sub('^\s+|\n|\r|\s+$', '- ', data[0][0])
-
         print(timetable)
+        print("\n")
 
-        reformat_key = re.search(r"\s...................\s[А-Я][А-Я]", timetable)
-        print(reformat_key.group(0))
+        reformat_timetable = timetable.split("\n")
+        print(reformat_timetable)
+
+        for i in reformat_timetable:
+            teacher = re.search(r"...................\s[А-Я][А-Я]", i)
+            reformat_teacher = teacher.group(0)
+            lesson = re.search(r"[0-9].[А-Я].................\s\s\s", i)
+            reformat_lesson = lesson.group(0)[2:]
+            await message.answer(reformat_teacher)
+            await message.answer(reformat_lesson)
 
         await message.answer(f"📅 {reformat_data.title()}\n----------------\n{timetable}")
 

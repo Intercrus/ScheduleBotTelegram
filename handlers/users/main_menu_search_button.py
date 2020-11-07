@@ -9,8 +9,10 @@ from aiogram.dispatcher import FSMContext
 from states.botStates import StatesOfBot
 from utils.data_util import get_data_from_google, find_timetable_by_teacher, find_timetable_by_group
 from utils.db_api import quick_commands as commands
+from utils.misc import rate_limit
 
 
+@rate_limit(limit=5)
 @dp.message_handler(text="Поиск")
 async def search_keyboard(message: Message):
     await message.answer(f"Выберите то, что нужно найти",
@@ -32,11 +34,21 @@ async def search_timetable_by_specific_day(message: Message, state: FSMContext):
     user = await commands.select_user(id=message.from_user.id)
     group_name = user.name_group
     data_today = datetime.strptime(message.text, "%Y-%m-%d")
-    data = await get_data_from_google(data_today)
-    timetable = await find_timetable_by_group(data, group_name)
+    try:
+        data = await get_data_from_google(data_today)
+        timetable = await find_timetable_by_group(data, group_name)
 
-    await message.answer(data[0][0])
-    await message.answer(timetable)
+        await message.answer(f"{data[0][0]}\n----------------\n{timetable}")
+    except HttpError:
+        name_day = data_today.strftime("%A")
+        format_data = data_today.strftime("%d.%m.%y")
+
+        if name_day == "Sunday":
+            await message.answer(f"{''.join(format_data)}, {''.join(name_day)}\n"
+                                 f"Выходной день")
+        else:
+            await message.answer(f"{''.join(format_data)}, {''.join(name_day)}\n"
+                                 f"Нет данных")
 
     await state.finish()
 
@@ -64,7 +76,7 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
         for item in timetable:
             msg += ' '.join(item) + '\n'
 
-        await message.answer(msg)
+        await message.answer(f"{data[0][0]}\n----------------\n{msg}")
 
     await state.finish()
 
@@ -81,13 +93,23 @@ async def specific_group_day(call: CallbackQuery):
 @dp.message_handler(state=StatesOfBot.search_by_name_group)
 async def search_timetable_by_name_group(message: Message, state: FSMContext):
     user = await commands.select_user(id=message.from_user.id)
-    group_name = user.name_group
     data_today = date.today()
 
-    data = await get_data_from_google(data_today)
-    timetable = await find_timetable_by_group(data, message.text)
+    try:
+        data = await get_data_from_google(data_today)
+        timetable = await find_timetable_by_group(data, message.text)
 
-    await message.answer(data[0][0])
-    await message.answer(timetable)
+        await message.answer(f"{data[0][0]}\n----------------\n{timetable}")
+
+    except HttpError:
+        name_day = data_today.strftime("%A")
+        format_data = data_today.strftime("%d.%m.%y")
+
+        if name_day == "Sunday":
+            await message.answer(f"{''.join(format_data)}, {''.join(name_day)}\n"
+                                 f"Выходной день")
+        else:
+            await message.answer(f"{''.join(format_data)}, {''.join(name_day)}\n"
+                                 f"Нет данных")
 
     await state.finish()

@@ -1,4 +1,5 @@
 import retrying
+import re
 from datetime import date, datetime, timedelta
 from aiogram.types import Message, CallbackQuery
 from googleapiclient.errors import HttpError
@@ -98,18 +99,42 @@ async def search_timetable_by_name_group(message: Message, state: FSMContext):
     try:
         data = await get_data_from_google(data_today)
         timetable = await find_timetable_by_group(data, message.text)
+        reformat_data = re.sub('^\s+|\n|\r|\s+$', '- ', data[0][0])
+        time_lessons = ["0", "08:30 - 09:50", "10:00-11:20",
+                        "11:30 - 12:50", "13:20 - 14:40",
+                        "14:50 - 16:10", "16:20 - 17:40", "17:50 - 19:10"]
+        reformat_timetable = timetable.split("\n")
+        div_info_lesson = []
 
-        await message.answer(f"{data[0][0]}\n----------------\n{timetable}")
+        for i in reformat_timetable:
 
+            try:
+                name_teacher = re.search(
+                    r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*",
+                    i).group(0)
+                name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
+                lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
+                cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я])", i).group(0)
+                number_of_lesson = re.search(r"[0-9]", i).group(0)
+
+                div_info_lesson.append(
+                    f"🕗 {time_lessons[int(number_of_lesson)]} 🕗\n 📖{lesson[2:].lstrip()}\n 🚪{cabinet.lstrip()}\n 👤{name_teacher_format.lstrip()}\n")
+            except AttributeError:
+                div_info_lesson.append(timetable)
+                break
+
+        new_line_n = "\n"
+        await message.answer(f"📅 {reformat_data.title()}\n\n"
+                             f"{f'{new_line_n}'.join(div_info_lesson)}")
     except HttpError:
         name_day = data_today.strftime("%A")
         format_data = data_today.strftime("%d.%m.%y")
 
         if name_day == "Sunday":
-            await message.answer(f"{''.join(format_data)}, {''.join(name_day)}\n"
+            await message.answer(f"📅 {''.join(format_data)}, {''.join(name_day)}\n"
                                  f"Выходной день")
         else:
-            await message.answer(f"{''.join(format_data)}, {''.join(name_day)}\n"
+            await message.answer(f"📅 {''.join(format_data)}, {''.join(name_day)}\n"
                                  f"Нет данных")
 
     await state.finish()

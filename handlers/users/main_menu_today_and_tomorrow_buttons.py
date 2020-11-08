@@ -32,32 +32,27 @@ async def schedule_today(message: Message):
         time_lessons = ["0", "08:30 - 09:50", "10:00-11:20",
                         "11:30 - 12:50", "13:20 - 14:40",
                         "14:50 - 16:10", "16:20 - 17:40", "17:50 - 19:10"]
-
         reformat_timetable = timetable.split("\n")
-        print(reformat_timetable)
-        mas_of_les_teach_cab = []
+        div_info_lesson = []
+
         for i in reformat_timetable:
 
             try:
-                teacher = re.search(r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*", i)
-                reformat_teacher = teacher.group(0)
-                reformat_teacher_2 = re.search(r"...................\s[А-Я][А-Я]", reformat_teacher)
-                reformat_teacher_3 = reformat_teacher_2.group(0)
-                lesson = re.search(r"[0-9].[А-Я].................\s", i)
-                reformat_lesson = lesson.group(0)
-                cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я])", i)
-                reformat_cabinet = cabinet.group(0)
-                name_lesson = re.search(r"[0-9]", i)
+                name_teacher = re.search(r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*", i).group(0)
+                name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
+                lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
+                cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я])", i).group(0)
+                number_of_lesson = re.search(r"[0-9]", i).group(0)
 
-                mas_of_les_teach_cab.append(
-                    f"🕗 {time_lessons[int(name_lesson.group())]} 🕗\n 📖{reformat_lesson[2:].lstrip()}\n 🚪{reformat_cabinet.lstrip()}\n 👤{reformat_teacher_3.lstrip()}\n")
+                div_info_lesson.append(
+                    f"🕗 {time_lessons[int(number_of_lesson)]} 🕗\n 📖{lesson[2:].lstrip()}\n 🚪{cabinet.lstrip()}\n 👤{name_teacher_format.lstrip()}\n")
             except AttributeError:
-                mas_of_les_teach_cab.append(timetable)
+                div_info_lesson.append(timetable)
                 break
 
         new_line_n = "\n"
         await message.answer(f"📅 {reformat_data.title()}\n\n"
-                             f"{f'{new_line_n}'.join(mas_of_les_teach_cab)}")
+                             f"{f'{new_line_n}'.join(div_info_lesson)}")
     except HttpError:
         name_day = data_today.strftime("%A")
         format_data = data_today.strftime("%d.%m.%y")

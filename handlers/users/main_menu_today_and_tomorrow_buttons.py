@@ -20,35 +20,44 @@ from utils.misc import rate_limit
 @rate_limit(limit=10)
 @dp.message_handler(text="Сегодня")
 async def schedule_today(message: Message):
-    global data
+    global data, new_line_n
     user = await commands.select_user(id=message.from_user.id)
     group_name = user.name_group
-    data_today = date.today() + timedelta(days=3)
+    data_today = date.today() + timedelta(days=1)
 
     try:
         data = await get_data_from_google(data_today)
         timetable = await find_timetable_by_group(data, group_name)
         reformat_data = re.sub('^\s+|\n|\r|\s+$', '- ', data[0][0])
-        print(timetable)
-        print("\n")
+        time_lessons = ["0", "08:30 - 09:50", "10:00-11:20",
+                        "11:30 - 12:50", "13:20 - 14:40",
+                        "14:50 - 16:10", "16:20 - 17:40", "17:50 - 19:10"]
 
         reformat_timetable = timetable.split("\n")
         print(reformat_timetable)
-
-        await message.answer(f"📅 {reformat_data.title()}\n\n")
-
+        mas_of_les_teach_cab = []
         for i in reformat_timetable:
-            teacher = re.search(r"...................\s[А-Я][А-Я]", i)
-            reformat_teacher = teacher.group(0)
-            lesson = re.search(r"[0-9].[А-Я].................\s\s\s", i)
-            reformat_lesson = lesson.group(0)[2:]
-            cabinet = re.search(r"\s\s\s\d\d", i)
-            reformat_cabinet = cabinet.group(0)
-            await message.answer(
-                f"📖{reformat_lesson.lstrip()}\n"
-                f"🚪{reformat_cabinet.lstrip()}\n"
-                f"👤{reformat_teacher.lstrip()}\n")
 
+            try:
+                teacher = re.search(r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*", i)
+                reformat_teacher = teacher.group(0)
+                reformat_teacher_2 = re.search(r"...................\s[А-Я][А-Я]", reformat_teacher)
+                reformat_teacher_3 = reformat_teacher_2.group(0)
+                lesson = re.search(r"[0-9].[А-Я].................\s", i)
+                reformat_lesson = lesson.group(0)
+                cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я])", i)
+                reformat_cabinet = cabinet.group(0)
+                name_lesson = re.search(r"[0-9]", i)
+
+                mas_of_les_teach_cab.append(
+                    f"🕗 {time_lessons[int(name_lesson.group())]} 🕗\n 📖{reformat_lesson[2:].lstrip()}\n 🚪{reformat_cabinet.lstrip()}\n 👤{reformat_teacher_3.lstrip()}\n")
+            except AttributeError:
+                mas_of_les_teach_cab.append(timetable)
+                break
+
+        new_line_n = "\n"
+        await message.answer(f"📅 {reformat_data.title()}\n\n"
+                             f"{f'{new_line_n}'.join(mas_of_les_teach_cab)}")
     except HttpError:
         name_day = data_today.strftime("%A")
         format_data = data_today.strftime("%d.%m.%y")

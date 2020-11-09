@@ -117,7 +117,7 @@ async def schedule_tomorrow(message: Message):
                                  f"Нет данных")
 
 
-@rate_limit(limit=10)
+@rate_limit(limit=30)
 @dp.message_handler(text="Неделя")
 async def schedule_for_week(message: Message):
     global data

@@ -7,6 +7,7 @@ from loader import dp, bot
 from keyboards.inline.setup_button_inline import setup_button
 from utils.db_api import quick_commands as commands
 from utils.misc import rate_limit
+from keyboards.inline.cancel_button_inline import cancel_button
 
 
 @rate_limit(limit=5)
@@ -22,8 +23,16 @@ async def subscribe_to_the_schedule(call: CallbackQuery):
     await bot.delete_message(message_id=call.message.message_id,
                              chat_id=call.message.chat.id)
     await call.message.answer('Укажите время, в которое хотите получать расписание. '
-                              'Например, "12:45"')
+                              'Например, "12:45"', reply_markup=cancel_button)
     await StatesOfBot.schedule_state.set()
+
+
+@dp.callback_query_handler(text_contains="come_back", state=StatesOfBot.schedule_state)  # Not finished
+async def cancel(call: CallbackQuery, state: FSMContext):
+    await call.answer(cache_time=60)
+    await bot.delete_message(message_id=call.message.message_id,
+                             chat_id=call.message.chat.id)
+    await state.finish()
 
 
 @dp.message_handler(state=StatesOfBot.schedule_state)

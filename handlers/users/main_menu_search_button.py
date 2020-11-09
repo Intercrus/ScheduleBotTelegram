@@ -10,10 +10,8 @@ from aiogram.dispatcher import FSMContext
 from states.botStates import StatesOfBot
 from utils.data_util import get_data_from_google, find_timetable_by_teacher, find_timetable_by_group
 from utils.db_api import quick_commands as commands
-from utils.misc import rate_limit
 
 
-@rate_limit(limit=5)
 @dp.message_handler(text="Поиск")
 async def search_keyboard(message: Message):
     await message.answer(f"Выберите то, что нужно найти",
@@ -32,9 +30,16 @@ async def schedule_for_a_specific_day(call: CallbackQuery):
 
 @dp.message_handler(state=StatesOfBot.search_by_spec_day)
 async def search_timetable_by_specific_day(message: Message, state: FSMContext):
+    global data_today
     user = await commands.select_user(id=message.from_user.id)
     group_name = user.name_group
-    data_today = datetime.strptime(message.text, "%Y-%m-%d")
+
+    try:
+        data_today = datetime.strptime(message.text, "%Y-%m-%d")
+    except ValueError:
+        await message.answer("Некорректный ввод даты.\n"
+                             "Введите дату в соответствии с образцом.")
+        await state.finish()
 
     try:
         data = await get_data_from_google(data_today)
@@ -66,6 +71,8 @@ async def search_timetable_by_specific_day(message: Message, state: FSMContext):
         new_line_n = "\n"
         await message.answer(f"📅 {reformat_data.title()}\n\n"
                              f"{f'{new_line_n}'.join(div_info_lesson)}")
+
+        await state.finish()
     except HttpError:
         name_day = data_today.strftime("%A")
         format_data = data_today.strftime("%d.%m.%y")
@@ -73,11 +80,11 @@ async def search_timetable_by_specific_day(message: Message, state: FSMContext):
         if name_day == "Sunday":
             await message.answer(f"📅 {''.join(format_data)}, {''.join(name_day)}\n"
                                  f"Выходной день")
+            await state.finish()
         else:
             await message.answer(f"📅 {''.join(format_data)}, {''.join(name_day)}\n"
                                  f"Нет данных")
-
-    await state.finish()
+            await state.finish()
 
 
 @dp.callback_query_handler(text_contains="schedule_for_teacher")
@@ -103,7 +110,7 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
         for item in timetable:
             msg += ' '.join(item) + '\n'
 
-        await message.answer(f"{data[0][0]}\n----------------\n{msg}")
+        await message.answer(msg)
 
     await state.finish()
 
@@ -119,7 +126,9 @@ async def specific_group_day(call: CallbackQuery):
 
 @dp.message_handler(state=StatesOfBot.search_by_name_group)
 async def search_timetable_by_name_group(message: Message, state: FSMContext):
+    global reformat_timetable
     user = await commands.select_user(id=message.from_user.id)
+    group_name = user.name_group
     data_today = date.today()
 
     try:
@@ -129,7 +138,9 @@ async def search_timetable_by_name_group(message: Message, state: FSMContext):
         time_lessons = ["0", "08:30 - 09:50", "10:00-11:20",
                         "11:30 - 12:50", "13:20 - 14:40",
                         "14:50 - 16:10", "16:20 - 17:40", "17:50 - 19:10"]
+
         reformat_timetable = timetable.split("\n")
+
         div_info_lesson = []
 
         for i in reformat_timetable:
@@ -152,6 +163,8 @@ async def search_timetable_by_name_group(message: Message, state: FSMContext):
         new_line_n = "\n"
         await message.answer(f"📅 {reformat_data.title()}\n\n"
                              f"{f'{new_line_n}'.join(div_info_lesson)}")
+        await state.finish()
+
     except HttpError:
         name_day = data_today.strftime("%A")
         format_data = data_today.strftime("%d.%m.%y")
@@ -159,8 +172,13 @@ async def search_timetable_by_name_group(message: Message, state: FSMContext):
         if name_day == "Sunday":
             await message.answer(f"📅 {''.join(format_data)}, {''.join(name_day)}\n"
                                  f"Выходной день")
+            await state.finish()
         else:
             await message.answer(f"📅 {''.join(format_data)}, {''.join(name_day)}\n"
                                  f"Нет данных")
+            await state.finish()
 
-    await state.finish()
+    except AttributeError:
+        await message.answer("Некорректный ввод группы.\n"
+                             "Введите группу в соответствии с образцом.")
+        await state.finish()

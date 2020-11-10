@@ -25,9 +25,6 @@ async def search_groups(message: Message, state: FSMContext):
 
     if acc_list:
         await message.answer(f"Группа {message.text} успешно найдена.\n"
-                             f"\n"
-                             f"Бот находится в разработке, поэтому большинство функций на данный момент недоступно.\n"
-                             f"\n"
                              f"Выберите пункт, который вам интересен",
                              reply_markup=main_menu)
 

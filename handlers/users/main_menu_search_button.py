@@ -55,17 +55,23 @@ async def search_timetable_by_specific_day(message: Message, state: FSMContext):
         for i in reformat_timetable:
 
             try:
-                name_teacher = re.search(
-                    r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*",
-                    i).group(0)
-                name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
-                lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
-                if name_teacher_format.lstrip() == "Маликина АВ":
-                    cabinet = ""
-                elif name_teacher_format.lstrip() == "Ольшина ТА":
-                    cabinet = ""
+                try:
+                    name_teacher = re.search(
+                        r"\s([А-Я](.)*\s[А-Я][А-Я][,](.)*\s[А-Я][А-Я]|[А-Я](.)*\s[А-Я][А-Я]\s|\s[А-Я]......\s[А-Я][А-Я]|\s[А-Я].......\s[А-Я][А-Я])",
+                        i).group(0)
+                    name_teacher_format = re.search(
+                        r"[А-Я][а-я](.)*\s[А-Я][А-Я]|[А-Я][а-я](.)*\s[А-Я][А-Я][,][А-Я](.)*\s[А-Я][А-Я]",
+                        name_teacher).group(0)
+                except AttributeError:
+                    name_teacher_format = ""
+                lesson = re.search(r"[0-9].[А-Я](.){18}\s|[0-9].[А-Я][А-Я]\s\d\d", i).group(0)
+
+                if name_teacher_format.strip() == "Маликина АВ" or name_teacher_format.strip() == "Ольшина ТА":
+                    cabinet = "-"
                 else:
-                    cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я]|\d\d[а-я]|\d|(\bакт)\s(\bзал)|\bдист)", i).group(0)
+                    cabinet = re.search(
+                        r"\s\s(\d\d[а-я]|[А-Я][А-Я]|\d\d/\d\d|\d\d|\d|(\bакт)\s(\bзал)|\s\sдист\s\s)", i).group(0)
+
                 number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                 div_info_lesson.append(
@@ -118,10 +124,9 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
 
         def concatenation_of_two_strings(elem):
             for x in zip_longest(elem[::2], elem[1::2], fillvalue=''):
-                yield ' '.join(x)
+                yield '  '.join(x)
 
         reformat_timetable_3 = list(concatenation_of_two_strings(reformat_timetable_2))
-
         div_info_lesson = []
 
         if not timetable:
@@ -131,12 +136,11 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
             for i in reformat_timetable_3:
                 print(reformat_timetable_3)
                 lesson = re.search(r"[0-9].[А-Я](.)*\s", i).group(0)
-                if message.text.lstrip() == "Маликина АВ":
-                    cabinet = ""
-                elif message.text.lstrip() == "Ольшина ТА":
-                    cabinet = ""
+                if message.text == "Маликина АВ" or message.text == "Ольшина ТА":
+                    cabinet = "-"
                 else:
-                    cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я]|\d\d[а-я]|\d|(\bакт)\s(\bзал)|\bдист)", i).group(0)
+                    cabinet = re.search(
+                        r"\s\s(\d\d[а-я]|[А-Я][А-Я]|\d\d/\d\d|\d\d|(\bакт)(\bзал)|дист|\d)", i).group(0)
                 number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                 div_info_lesson.append(
@@ -178,7 +182,6 @@ async def specific_group_day(call: CallbackQuery):
 async def search_timetable_by_name_group(message: Message, state: FSMContext):
     global reformat_timetable
     user = await commands.select_user(id=message.from_user.id)
-    group_name = user.name_group
     data_today = date.today()
 
     try:
@@ -196,17 +199,23 @@ async def search_timetable_by_name_group(message: Message, state: FSMContext):
         for i in reformat_timetable:
 
             try:
-                name_teacher = re.search(
-                    r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*",
-                    i).group(0)
-                name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
-                lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
-                if name_teacher_format.lstrip() == "Маликина АВ":
-                    cabinet = ""
-                elif name_teacher_format.lstrip() == "Ольшина ТА":
-                    cabinet = ""
+                try:
+                    name_teacher = re.search(
+                        r"\s([А-Я](.)*\s[А-Я][А-Я][,](.)*\s[А-Я][А-Я]|[А-Я](.)*\s[А-Я][А-Я]\s|\s[А-Я]......\s[А-Я][А-Я]|\s[А-Я].......\s[А-Я][А-Я])",
+                        i).group(0)
+                    name_teacher_format = re.search(
+                        r"[А-Я][а-я](.)*\s[А-Я][А-Я]|[А-Я][а-я](.)*\s[А-Я][А-Я][,][А-Я](.)*\s[А-Я][А-Я]",
+                        name_teacher).group(0)
+                except AttributeError:
+                    name_teacher_format = ""
+                lesson = re.search(r"[0-9].[А-Я](.){18}\s|[0-9].[А-Я][А-Я]\s\d\d", i).group(0)
+
+                if name_teacher_format.strip() == "Маликина АВ" or name_teacher_format.strip() == "Ольшина ТА":
+                    cabinet = "-"
                 else:
-                    cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я]|\d\d[а-я]|\d|(\bакт)\s(\bзал)|\bдист)", i).group(0)
+                    cabinet = re.search(
+                        r"\s\s(\d\d[а-я]|[А-Я][А-Я]|\d\d/\d\d|\d\d|\d|(\bакт)\s(\bзал)|\s\sдист\s\s)", i).group(0)
+
                 number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                 div_info_lesson.append(

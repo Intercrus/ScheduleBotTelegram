@@ -36,22 +36,29 @@ async def send_notification():
                 for i in reformat_timetable:
 
                     try:
-                        name_teacher = re.search(
-                            r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*",
-                            i).group(0)
-                        name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
-                        lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
-                        if name_teacher_format.lstrip() == "Маликина АВ":
-                            cabinet = ""
-                        elif name_teacher_format.lstrip() == "Ольшина ТА":
-                            cabinet = ""
+                        try:
+                            name_teacher = re.search(
+                                r"\s([А-Я](.)*\s[А-Я][А-Я][,](.)*\s[А-Я][А-Я]|[А-Я](.)*\s[А-Я][А-Я]\s|\s[А-Я]......\s[А-Я][А-Я]|\s[А-Я].......\s[А-Я][А-Я])",
+                                i).group(0)
+                            name_teacher_format = re.search(
+                                r"[А-Я][а-я](.)*\s[А-Я][А-Я]|[А-Я][а-я](.)*\s[А-Я][А-Я][,][А-Я](.)*\s[А-Я][А-Я]",
+                                name_teacher).group(0)
+                        except AttributeError:
+                            name_teacher_format = ""
+                        lesson = re.search(r"[0-9].[А-Я](.){18}\s|[0-9].[А-Я][А-Я]\s\d\d", i).group(0)
+
+                        if name_teacher_format.strip() == "Маликина АВ" or name_teacher_format.strip() == "Ольшина ТА":
+                            cabinet = "-"
                         else:
-                            cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я]|\d\d[а-я]|\d|(\bакт)\s(\bзал)|\bдист)", i).group(
+                            cabinet = re.search(
+                                r"\s\s(\d\d[а-я]|[А-Я][А-Я]|\d\d/\d\d|\d\d|\d|(\bакт)\s(\bзал)|\s\sдист\s\s)", i).group(
                                 0)
+
                         number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                         div_info_lesson.append(
                             f"🕗 {time_lessons[int(number_of_lesson)]} 🕗\n 📖{lesson[2:].lstrip()}\n 🚪{cabinet.lstrip()}\n 👤{name_teacher_format.lstrip()}\n")
+
                     except AttributeError:
                         div_info_lesson.append(timetable)
                         break

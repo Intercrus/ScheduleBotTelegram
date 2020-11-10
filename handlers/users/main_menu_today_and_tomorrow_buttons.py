@@ -20,7 +20,7 @@ from utils.misc import rate_limit
 @rate_limit(limit=10)
 @dp.message_handler(text="Сегодня")
 async def schedule_today(message: Message):
-    global data, new_line_n
+    global data, new_line_n, name_teacher_format, name_teacher
     user = await commands.select_user(id=message.from_user.id)
     group_name = user.name_group
     data_today = date.today()
@@ -36,18 +36,27 @@ async def schedule_today(message: Message):
         div_info_lesson = []
 
         for i in reformat_timetable:
-
+            print(reformat_timetable)
             try:
-                name_teacher = re.search(
-                    r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*",
-                    i).group(0)
-                name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
-                lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
-                cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я])", i).group(0)
+                try:
+                    name_teacher = re.search(
+                        r"\s([А-Я](.)*\s[А-Я][А-Я]\s|[А-Я](.)*\s[А-Я][А-Я][,](.)*\s[А-Я][А-Я]|\s[А-Я]......\s[А-Я][А-Я]|\s[А-Я].......\s[А-Я][А-Я])",
+                        i).group(0)
+                    name_teacher_format = re.search(r"(.)*\s[А-Я][А-Я]", name_teacher).group(0)
+                except AttributeError:
+                    name_teacher_format = ""
+                lesson = re.search(r"[0-9].[А-Я](.){18}\s|[0-9].[А-Я][А-Я]\s\d\d", i).group(0)
+
+                if name_teacher_format.strip() == "Маликина АВ" or name_teacher_format.strip() == "Ольшина ТА":
+                    cabinet = "-"
+                else:
+                    cabinet = re.search(r"\s\s(\d\d[а-я]|[А-Я][А-Я]|\d\d/\d\d|\d\d|\d|(\bакт)\s(\bзал)|\s\sдист\s\s)", i).group(0)
+
                 number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                 div_info_lesson.append(
                     f"🕗 {time_lessons[int(number_of_lesson)]} 🕗\n 📖{lesson[2:].lstrip()}\n 🚪{cabinet.lstrip()}\n 👤{name_teacher_format.lstrip()}\n")
+
             except AttributeError:
                 div_info_lesson.append(timetable)
                 break
@@ -89,11 +98,17 @@ async def schedule_tomorrow(message: Message):
 
             try:
                 name_teacher = re.search(
-                    r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*",
+                    r"...................\s[А-Я][А-Я][,]*[А-Я]*(.)*[а-я]*[\s]*[А-Я]*[А-Я]*",
                     i).group(0)
-                name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
+                print(name_teacher)
+                name_teacher_format = re.search(r"(.)*\s[А-Я][А-Я]", name_teacher).group(0)
                 lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
-                cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я])", i).group(0)
+                if name_teacher_format.lstrip() == "Маликина АВ":
+                    cabinet = ""
+                elif name_teacher_format.lstrip() == "Ольшина ТА":
+                    cabinet = ""
+                else:
+                    cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я]|\d\d[а-я]|\d|(\bакт)\s(\bзал)|\bдист)", i).group(0)
                 number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                 div_info_lesson.append(
@@ -143,9 +158,14 @@ async def schedule_for_week(message: Message):
                     name_teacher = re.search(
                         r"...................\s[А-Я][А-Я][,]*[А-Я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[а-я]*[\s]*[А-Я]*[А-Я]*",
                         i).group(0)
-                    name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
+                    name_teacher_format = re.search(r"(.)*\s[А-Я][А-Я]", name_teacher).group(0)
                     lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
-                    cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я])", i).group(0)
+                    if name_teacher_format.lstrip() == "Маликина АВ":
+                        cabinet = ""
+                    elif name_teacher_format.lstrip() == "Ольшина ТА":
+                        cabinet = ""
+                    else:
+                        cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я]|\d\d[а-я]|\d|(\bакт)\s(\bзал)|\bдист)", i).group(0)
                     number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                     div_info_lesson.append(

@@ -22,7 +22,7 @@ async def subscribe_to_the_schedule(call: CallbackQuery):
     await call.answer(cache_time=60)
     await bot.delete_message(message_id=call.message.message_id,
                              chat_id=call.message.chat.id)
-    await call.message.answer('Укажите время, в которое хотите получать расписание. '
+    await call.message.answer('Укажите время, в которое хотите получать расписание.\n'
                               'Например, "12:45"', reply_markup=cancel_button)
     await StatesOfBot.schedule_state.set()
 
@@ -43,7 +43,7 @@ async def set_subscribe(message: Message, state: FSMContext):
                                                 id=message.from_user.id)
         await state.finish()
     else:
-        await message.answer(f"Указано некорректное время. Попробуйте еще раз.")
+        await message.answer(f"Указано некорректное время. \nПопробуйте еще раз.")
 
 
 @dp.callback_query_handler(text_contains="advertisement")  # Completed

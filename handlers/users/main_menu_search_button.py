@@ -60,7 +60,12 @@ async def search_timetable_by_specific_day(message: Message, state: FSMContext):
                     i).group(0)
                 name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
                 lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
-                cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я])", i).group(0)
+                if name_teacher_format.lstrip() == "Маликина АВ":
+                    cabinet = ""
+                elif name_teacher_format.lstrip() == "Ольшина ТА":
+                    cabinet = ""
+                else:
+                    cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я]|\d\d[а-я]|\d|(\bакт)\s(\bзал)|\bдист)", i).group(0)
                 number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                 div_info_lesson.append(
@@ -121,10 +126,17 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
 
         if not timetable:
             await message.answer('Ничего не найдено')
+            await state.finish()
         else:
             for i in reformat_timetable_3:
+                print(reformat_timetable_3)
                 lesson = re.search(r"[0-9].[А-Я](.)*\s", i).group(0)
-                cabinet = re.search(r"\s(\d\d|[А-Я][А-Я])", i).group(0)
+                if message.text.lstrip() == "Маликина АВ":
+                    cabinet = ""
+                elif message.text.lstrip() == "Ольшина ТА":
+                    cabinet = ""
+                else:
+                    cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я]|\d\d[а-я]|\d|(\bакт)\s(\bзал)|\bдист)", i).group(0)
                 number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                 div_info_lesson.append(
@@ -147,6 +159,10 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
             await message.answer(f"📅 {''.join(format_data)}, {''.join(name_day)}\n"
                                  f"Нет данных")
             await state.finish()
+
+    except IndexError:
+        await state.finish()
+
 
 
 @dp.callback_query_handler(text_contains="schedule_for_group")
@@ -185,7 +201,12 @@ async def search_timetable_by_name_group(message: Message, state: FSMContext):
                     i).group(0)
                 name_teacher_format = re.search(r"...................\s[А-Я][А-Я]", name_teacher).group(0)
                 lesson = re.search(r"[0-9].[А-Я].................\s", i).group(0)
-                cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я])", i).group(0)
+                if name_teacher_format.lstrip() == "Маликина АВ":
+                    cabinet = ""
+                elif name_teacher_format.lstrip() == "Ольшина ТА":
+                    cabinet = ""
+                else:
+                    cabinet = re.search(r"\s\s(\d\d|[А-Я][А-Я]|\d\d[а-я]|\d|(\bакт)\s(\bзал)|\bдист)", i).group(0)
                 number_of_lesson = re.search(r"[0-9]", i).group(0)
 
                 div_info_lesson.append(

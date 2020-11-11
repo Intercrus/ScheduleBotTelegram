@@ -5,7 +5,7 @@
 
 ## Начало
 1. Клонируйте репозиторий.
-2. В /ScheduleBotTelegram/ добавьте файл .env (рядом с app.py и loader.py)
+2. В /ScheduleBotTelegram/ добавьте файл .env (рядом с app.py и loader.py) (путь к .env: /ScheduleBotTelegram/.env)
 3. Настройте .env:
 ```
 BOT_TOKEN= 123123asdbahsbdhb # Токен вашего бота

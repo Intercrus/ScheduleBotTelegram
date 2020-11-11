@@ -20,6 +20,8 @@ DATABASE=gino # Ваша база данных в PostgreSQL
 ```
 file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt")
 ```
+6. Скачать PostgreSQL и зайти в pgAdmin. Там создать сервер с такими настройками:
+
 
 
 

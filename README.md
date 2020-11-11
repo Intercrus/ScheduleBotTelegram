@@ -3,6 +3,9 @@
 > Бот написан на Python, с использованием библиотеки aiogram и базы данных PostgreSQL.
 > Данного бота можно добавить к себе в телеграм, перейдя по ссылке: @PKTK_schedule_bot
 
+## Демо
+![Animated gif](Peek 2020-11-12 01-01.gif "demo")
+
 ## Начало
 1. Клонируйте репозиторий.
 2. В /ScheduleBotTelegram/ добавьте файл .env (рядом с app.py и loader.py) (путь к .env: /ScheduleBotTelegram/.env)

@@ -4,6 +4,7 @@
 > Данного бота можно добавить к себе в телеграм, перейдя по ссылке: @PKTK_schedule_bot
 
 ## Демо
+
 ![demo](https://github.com/Intercrus/ScheduleBotTelegram/blob/master/Peek%202020-11-12%2001-01.gif)
 
 ## Начало
@@ -26,6 +27,7 @@ file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/nam
 6. Скачать PostgreSQL и зайти в pgAdmin. Там создать сервер с такими настройками (если вы используете Windows, то host отличается):
 
 ![](https://github.com/Intercrus/ScheduleBotTelegram/blob/master/Screenshot%20from%202020-11-12%2000-50-39.png)
+
 7. Установить модули, которые использует бот. Они находятся в /ScheduleBotTelegram/requirements.txt.
 8. Запустить app.py
 

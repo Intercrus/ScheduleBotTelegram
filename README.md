@@ -4,7 +4,7 @@
 > Данного бота можно добавить к себе в телеграм, перейдя по ссылке: @PKTK_schedule_bot
 
 ## Демо
-![](Peek 2020-11-12 01-01.gif)
+![demo](https://github.com/Intercrus/ScheduleBotTelegram/blob/master/Peek%202020-11-12%2001-01.gif)
 
 ## Начало
 1. Клонируйте репозиторий.

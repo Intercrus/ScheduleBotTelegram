@@ -1,11 +1,9 @@
-import asyncpg
-from aiogram.dispatcher.filters.builtin import Text
-from aiogram.types import Message, ReplyKeyboardRemove
+
+from aiogram.types import Message
 from keyboards.default import main_menu
-from loader import dp, bot
+from loader import dp
 from aiogram.dispatcher import FSMContext
 from states.botStates import StatesOfBot
-from keyboards.inline import setup_button_inline, setup_callback
 from utils.db_api import quick_commands as commands
 
 

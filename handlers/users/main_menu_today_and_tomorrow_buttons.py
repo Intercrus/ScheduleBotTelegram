@@ -1,11 +1,6 @@
-from datetime import date, timedelta, datetime
-import sys
+from datetime import date, timedelta
 import re
-from pprint import pprint
-import apiclient
-import httplib2
-import requests
-import retrying
+
 
 from bs4 import BeautifulSoup
 from googleapiclient.errors import HttpError

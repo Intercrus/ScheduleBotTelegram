@@ -1,4 +1,4 @@
-import retrying
+
 import re
 from datetime import date, datetime, timedelta
 from aiogram.types import Message, CallbackQuery

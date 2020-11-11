@@ -6,7 +6,7 @@ main_menu = ReplyKeyboardMarkup(
             KeyboardButton(text="Сегодня"),
             KeyboardButton(text="Завтра")
         ],
-        [
+[
             KeyboardButton(text="Неделя"),
         ],
         [

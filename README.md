@@ -31,7 +31,7 @@ file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/nam
 7. Установить модули, которые использует бот. Они находятся в /ScheduleBotTelegram/requirements.txt.
 8. Запустить app.py
 
-> После вышеперечисленных действий бот должен начать работать. Если что-то не получилось пишите мне: [@scytheofdeath](http://telegram.me/scytheofdeath)
+> После выполнения вышеперечисленных действий бот должен начать работать. Если что-то не получилось пишите мне: [@scytheofdeath](http://telegram.me/scytheofdeath)
 
 
 

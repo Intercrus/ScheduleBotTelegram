@@ -16,7 +16,10 @@ PG_PASSWORD=passwd # Ваш пароль от пользователя postgresq
 DATABASE=gino # Ваша база данных в PostgreSQL
 ```
 4. В /ScheduleBotTelegram/data/ добавьте ключ-пару от гугл таблиц в формате .json. Как получить эту ключ-пару объяснено в этом видео: https://www.youtube.com/watch?v=Bf8KHZtcxnA&t=232s (путь к key.json: /ScheduleBotTelegram/data/key.json)
-5. Измените пути к файлам в зависимости от вашей операционной системы и названия ваших директорий. Например в файле /ScheduleBotTelegram/handlers/users/start.py изменить путь в этой строке: ```file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt")```
+5. Измените пути к файлам в зависимости от вашей операционной системы и названия ваших директорий. Например в файле /ScheduleBotTelegram/handlers/users/start.py изменить путь в этой строке: 
+```
+file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt")
+```
 
 
 

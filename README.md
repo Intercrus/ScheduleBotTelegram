@@ -24,6 +24,12 @@ DATABASE=gino # Ваша база данных в PostgreSQL
 file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt")
 ```
 6. Скачать PostgreSQL и зайти в pgAdmin. Там создать сервер с такими настройками:
+![](https://github.com/Intercrus/ScheduleBotTelegram/blob/master/Screenshot%20from%202020-11-12%2000-50-39.png)
+7. Установить модули, которые использует бот. Они находятся в /ScheduleBotTelegram/requirements.txt.
+8. Запустить app.py
+
+> После вышеперечисленных действий бот должен начать работать. Если что-то не получилось пишите мне: @scytheofdeath
+
 
 
 

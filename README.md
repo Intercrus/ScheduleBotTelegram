@@ -15,6 +15,8 @@ PG_USER= postgres # Ваш пользователь в PostgreSQL
 PG_PASSWORD=passwd # Ваш пароль от пользователя postgresql
 DATABASE=gino # Ваша база данных в PostgreSQL
 ```
+4. В /ScheduleBotTelegram/data/ добавьте ключ-пару от гугл таблиц в формате .json. Как получить эту ключ-пару объяснено в этом видео: https://www.youtube.com/watch?v=Bf8KHZtcxnA&t=232s (путь к key.json: /ScheduleBotTelegram/data/key.json)
+
 
 
 

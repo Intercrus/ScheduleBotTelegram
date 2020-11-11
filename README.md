@@ -1,4 +1,7 @@
 # ScheduleBotTelegram
-Bot that sends the lesson schedule
+Бот для Telegram, который отправляет расписание пар Петрозаводского кооперативного техникума.
+Данного бота можно добавить к себе в телеграм, перейдя по ссылке: @PKTK_schedule_bot
 
-# Architecture from https://github.com/Latand/aiogram-bot-template
+
+
+

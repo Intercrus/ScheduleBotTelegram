@@ -7,8 +7,9 @@
 
 ![demo](https://github.com/Intercrus/ScheduleBotTelegram/blob/master/Peek%202020-11-12%2001-01.gif)
 
-## Начало
-1. Клонируйте репозиторий.
+## Начало работы
+
+1. Клонируйте репозиторий
 2. В /ScheduleBotTelegram/ добавьте файл .env (рядом с app.py и loader.py) (путь к .env: /ScheduleBotTelegram/.env)
 3. Настройте .env:
 ```
@@ -28,10 +29,32 @@ file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/nam
 
 ![](https://github.com/Intercrus/ScheduleBotTelegram/blob/master/Screenshot%20from%202020-11-12%2000-50-39.png)
 
-7. Установить модули, которые использует бот. Они находятся в /ScheduleBotTelegram/requirements.txt.
+7. Установить модули, которые использует бот. Они находятся в /ScheduleBotTelegram/requirements.txt
 8. Запустить app.py
 
 > После выполнения вышеперечисленных действий бот должен начать работать. Если что-то не получилось пишите мне: [@scytheofdeath](http://telegram.me/scytheofdeath)
+
+## Установка на сервер
+
+> Я буду рассматривать установку на примере Amazon AWS EC2 с использованием docker.
+
+1. Создайте аккаунт на aws.amazon
+2. Создайте instance (я рассматриваю instance ubuntu)
+3. Network & Security => Security Groups => Edit Inbound Rules- туда добавьте ssh с вашим ip; также добавьте PostgreSQL с любым ip
+4. Подключитесь к серверу с помощью команды:
+```
+ssh -i /путь к вашему ключу от инстанса Amazon/ ubuntu@ip инстанса
+```
+> Если не получилось подключиться (выдает ошибку Permission Denied) попробуйте изменить права:
+```
+chmod 600 /путь к ключу/
+```
+> Если и это не помогло, то гугл в помощь.
+5. Загрузите файлы бота на сервер:
+```
+scp -i /путь к ключу/ -r /путь к ScheduleBotTelegram (эту директорию будем копировать на сервер)/ ubuntu@ip инстанса:/home/ubuntu 
+```
+> /home/ubuntu - директория на сервере, куда будут скопированы файлы бота
 
 
 

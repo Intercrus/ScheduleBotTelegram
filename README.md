@@ -85,87 +85,86 @@ sudo docker-compose up
 ## Структура репозитория
 ```
 .
-├── data                            
+├── data                                                            
 │   ├── __init__.py
-│   └── key.json
-│   └── config.py
-│   └── name_groups.txt
+│   └── key.json                                           # Ключ-пара от Google Sheets
+│   └── config.py                                          # Туда загружаются переменные окружения (токен бота, id админа, postgresql и т.д.)
+│   └── name_groups.txt                                    # Названия всех групп
 │
-├── filters                             
+├── filters                                                # Фильтры для хендлеров (фильтрация апдейтов)                    
 │   └── __init__.py
 │
-├── handlers
-│   ├── channels
+├── handlers                                               # Хендлеры (обработчики апдейтов)
+│   ├── channels                                           # Хендлеры для каналов                    
 │   │   └── __init__.py
-│   └── errors
+│   └── errors                                             # Хендлеры ошибок
 │   │   ├── __init__.py
 │   │   └── error_handler.py
-│   └── groups
+│   └── groups                                             # Хендлеры для групп
 │   │   └── __init__.py 
-│   └── users
+│   └── users                                              # Хендлеры для пользователей
 │   │   ├── __init__.py
-│   │   └── help.py
-│   │   └── main_menu_search_button.py
-│   │   └── main_menu_setup_button.py
-│   │   └── main_menu_today_and_tomorrow_buttons.py
-│   │   └── search_groups.py
-│   │   └── start.py
+│   │   └── help.py                                        # Команда /help
+│   │   └── main_menu_search_button.py                     # Кнопка <Поиск>
+│   │   └── main_menu_setup_button.py                      # Кнопка <Настройки>
+│   │   └── main_menu_today_and_tomorrow_buttons.py        # Кнопки <Сегодня>, <Завтра>, <Неделя>
+│   │   └── search_groups.py                               # "Регистрация" пользователя
+│   │   └── start.py                                       # Команда /start
 │   └── __init__.py
-│
-├── keyboards
-│   ├── default
+│                                                          
+├── keyboards                                              # Клавиатуры 
+│   ├── default                                            # Обычные клавиатуры
 │   │   ├── __init__.py
-│   │   └── main_menu.py
-│   └── inline
+│   │   └── main_menu.py                                   # Клавиатура главного меню с кнопками <Сегодня>, <Завтра>, <Неделя>, <Поиск>, <Настройки>
+│   └── inline                                             # Inline-клавиатуры
 │   │   ├── __init__.py
-│   │   └── cancel_button_callback.py
-│   │   └── cancel_button_inline.py
-│   │   └── search_button_inline.py
-│   │   └── search_callback.py
-│   │   └── setup_button_inline.py
-│   │   └── setup_callback.py
+│   │   └── cancel_button_callback.py                      # Коллбек кнопки <Отмена>
+│   │   └── cancel_button_inline.py                        # Кнопка <Отмена>
+│   │   └── search_button_inline.py                        # Кнопка <Поиск>
+│   │   └── search_callback.py                             # Коллбек кнопки <Поиск>
+│   │   └── setup_button_inline.py                         # Кнопка <Настройки>
+│   │   └── setup_callback.py                              # Коллбек кнопки <Настройки>
 │   └── __init__.py
 │    
-├── middlewares
+├── middlewares                                            # Промежуточные программы, они влияют на то, что попадает в хендлер. 
 │   ├── __init__.py
-│   └── throttling.py
+│   └── throttling.py                                      # Защита от флуда
 │    
-├── states   
-│   ├── __init__.py
-│   └── botStates.py
+├── states                                                 # Состояния для машины состояний (FSM)
+│   ├── __init__.py         
+│   └── botStates.py                                       # Машина состояний для "регистрации" и некоторых хендлеров
 │    
-├── utils
-│   ├── db_api
-│   │   ├── schemas
+├── utils                                                  # Вспомогательные модули
+│   ├── db_api                                             # Работа с базой данных
+│   │   ├── schemas 
 │   │   │   ├── __init__.py
-│   │   │   └── user.py
+│   │   │   └── user.py                                    # Создание таблицы
 │   │   └── __init__.py
-│   │   └── db_gino.py
-│   │   └── quick_commands.py
-│   └── misc
+│   │   └── db_gino.py                                     # База данных gino
+│   │   └── quick_commands.py                              # Функции для работы с базой данных (например обновление названия группы для пользователя)
+│   └── misc                                
 │   │   ├── __init__.py
-│   │   └── logging.py
-│   │   └── parsing.py
-│   │   └── throttling.py
-│   └── redis
-│   │   ├── __init__.py
+│   │   └── logging.py                                     # Логгирование                                      
+│   │   └── throttling.py                                  # Функция rate_limit для троттлинга 
+│   └── redis                                              # Константы для работы с redis
+│   │   ├── __init__.py                                    
 │   │   └── consts.py
 │   └── __init__.py
-│   └── data_util.py
-│   └── notify_admins.py
-│   └── scheduler.py
-│   └── set_bot_commands.py
-│    
-├── .env                     
+│   └── data_util.py                                       # Парсинг
+│   └── notify_admins.py                                   # Сообщения для админов
+│   └── scheduler.py                                       # Реализация подписки на расписание
+│   └── set_bot_commands.py                                # Список команд бота
+│                                                              
+├── .env                                                   # Переменные окружения (токен бота, id админа, postgresql и т.д.)
 ├── .gitignore
-├── app.py
-├── docker-compose.yml
-├── Dockerfile
-├── loader.py                    
+├── app.py                                                 # Главный файл. В этом файле запускается работа бота. Через этот файл и запускается сам бот
+├── docker-compose.yml                                     # Файл для docker-compose
+├── Dockerfile                                             # Файл для docker
+├── loader.py                                              # Второй главный файл. В этот файл все импортируется, в нем содержатся главные переменные      
 ├── README.md               
-└── requirements.txt
+└── requirements.txt                                       # Зависимости (модули), которые необходимы для работы бота.
 ```
-
+> Файлы __init__.py нужны для правильного импорта модулей.
 
 
 

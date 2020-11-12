@@ -65,13 +65,18 @@ file_name_group = open("/src/data/name_groups.txt")
 ```
 ip: db
 ```
-8. Находясь в ```/home/ubuntu/ScheduleBotTelegram``` (путь к ```/ScheduleBotTelegram```) напишите команду:
+8. Установите docker-compose на инстанс:
+```
+sudo apt-get update
+sudo apt-get install docker docker-compose
+```
+9. Находясь в ```/home/ubuntu/ScheduleBotTelegram``` (путь к ```/ScheduleBotTelegram```) напишите команду:
 ```
 sudo docker-compose up
 ```
 > После этого бот должен запуститься. Если этого не произошло,то смотрите логи и исправляйте файлы .env или обычные файлы.
 > После изменений файлов контейнер можно пересобрать: ```sudo docker-compose up --build```
-9. Чтобы увидеть базу данных, в которую летят юзеры, нужно через PostgreSQL создать сервер, в котором указывается ip инстанса Amazon. Паролем является тот пароль, который указан в .env
+10. Чтобы увидеть базу данных, в которую летят юзеры, нужно через PostgreSQL создать сервер, в котором указывается ip инстанса Amazon. Паролем является тот пароль, который указан в .env
 
 > Ctrl + Z - оставить бота включенным. После этого можно будет выходить с сервера и бот будет работать на фоне.
 > Остановить бота: ```sudo docker-compose stop``` 

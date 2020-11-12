@@ -79,8 +79,92 @@ sudo docker-compose up
 10. Чтобы увидеть базу данных, в которую летят юзеры, нужно через PostgreSQL создать сервер, в котором указывается ip инстанса Amazon. Паролем является тот пароль, который указан в .env
 
 > Ctrl + Z - оставить бота включенным. После этого можно будет выходить с сервера и бот будет работать на фоне.
-> Остановить бота: ```sudo docker-compose stop``` 
+> Остановить бота: ```sudo docker-compose stop```. 
 > Если не получается установить бота на сервер после выполнения вышеперечисленных действий пишите мне [@scytheofdeath](http://telegram.me/scytheofdeath)
+
+## Структура репозитория
+```
+.
+├── data                            
+│   ├── __init__.py
+│   └── key.json
+│   └── config.py
+│   └── name_groups.txt
+│
+├── filters                             
+│   └── __init__.py
+│
+├── handlers
+│   ├── channels
+│   │   └── __init__.py
+│   └── errors
+│   │   ├── __init__.py
+│   │   └── error_handler.py
+│   └── groups
+│   │   └── __init__.py 
+│   └── users
+│   │   ├── __init__.py
+│   │   └── help.py
+│   │   └── main_menu_search_button.py
+│   │   └── main_menu_setup_button.py
+│   │   └── main_menu_today_and_tomorrow_buttons.py
+│   │   └── search_groups.py
+│   │   └── start.py
+│   └── __init__.py
+│
+├── keyboards
+│   ├── default
+│   │   ├── __init__.py
+│   │   └── main_menu.py
+│   └── inline
+│   │   ├── __init__.py
+│   │   └── cancel_button_callback.py
+│   │   └── cancel_button_inline.py
+│   │   └── search_button_inline.py
+│   │   └── search_callback.py
+│   │   └── setup_button_inline.py
+│   │   └── setup_callback.py
+│   └── __init__.py
+│    
+├── middlewares
+│   ├── __init__.py
+│   └── throttling.py
+│    
+├── states   
+│   ├── __init__.py
+│   └── botStates.py
+│    
+├── utils
+│   ├── db_api
+│   │   ├── schemas
+│   │   │   ├── __init__.py
+│   │   │   └── user.py
+│   │   └── __init__.py
+│   │   └── db_gino.py
+│   │   └── quick_commands.py
+│   └── misc
+│   │   ├── __init__.py
+│   │   └── logging.py
+│   │   └── parsing.py
+│   │   └── throttling.py
+│   └── redis
+│   │   ├── __init__.py
+│   │   └── consts.py
+│   └── __init__.py
+│   └── data_util.py
+│   └── notify_admins.py
+│   └── scheduler.py
+│   └── set_bot_commands.py
+│    
+├── .env                     
+├── .gitignore
+├── app.py
+├── docker-compose.yml
+├── Dockerfile
+├── loader.py                    
+├── README.md               
+└── requirements.txt
+```
 
 
 

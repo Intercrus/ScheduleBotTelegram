@@ -40,7 +40,7 @@ file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/nam
 
 1. Создайте аккаунт на aws.amazon
 2. Создайте instance (я рассматриваю instance ubuntu)
-3. Network & Security => Security Groups => Edit Inbound Rules- туда добавьте ssh с вашим ip; также добавьте PostgreSQL с любым ip
+3. Network & Security → Security Groups → Edit Inbound Rules- туда добавьте ssh с вашим ip; также добавьте PostgreSQL с любым ip
 4. Подключитесь к серверу с помощью команды:
 ```
 ssh -i /путь к вашему ключу от инстанса Amazon/ ubuntu@ip инстанса

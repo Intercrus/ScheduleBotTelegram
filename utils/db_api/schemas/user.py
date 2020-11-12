@@ -10,7 +10,7 @@ class User(TimedBaseModel):
     email = Column(String(100))
     name_group = Column(String(100), nullable=True)
     mailing_time = Column(String(5), nullable=True)
-
+    teacher = Column(String(50), nullable=True)
     referral = Column(BigInteger)
 
     query: sql.Select

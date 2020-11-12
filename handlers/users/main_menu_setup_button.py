@@ -27,14 +27,6 @@ async def subscribe_to_the_schedule(call: CallbackQuery):
     await StatesOfBot.schedule_state.set()
 
 
-@dp.callback_query_handler(text_contains="come_back", state=StatesOfBot.schedule_state)  # Not finished
-async def cancel(call: CallbackQuery, state: FSMContext):
-    await call.answer(cache_time=60)
-    await bot.delete_message(message_id=call.message.message_id,
-                             chat_id=call.message.chat.id)
-    await state.finish()
-
-
 @dp.message_handler(state=StatesOfBot.schedule_state)
 async def set_subscribe(message: Message, state: FSMContext):
     if re.match(r'^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$', message.text):
@@ -44,6 +36,14 @@ async def set_subscribe(message: Message, state: FSMContext):
         await state.finish()
     else:
         await message.answer(f"Указано некорректное время. \nПопробуйте еще раз.")
+
+
+@dp.callback_query_handler(text_contains="come_back", state=StatesOfBot.schedule_state)  # Not finished
+async def cancel(call: CallbackQuery, state: FSMContext):
+    await call.answer(cache_time=60)
+    await bot.delete_message(message_id=call.message.message_id,
+                             chat_id=call.message.chat.id)
+    await state.finish()
 
 
 @dp.callback_query_handler(text_contains="advertisement")  # Completed
@@ -68,6 +68,7 @@ async def reset_settings(call: CallbackQuery, state: FSMContext):
     await bot.send_document(chat_id=call.message.chat.id, document=file_name_group)
     file_name_group.close()
 
+    await commands.delete_user_teacher(id=call.message.chat.id)
     await commands.delete_user_name_group(id=call.message.chat.id)
     await commands.delete_user_mailing_time(id=call.message.chat.id)
     await StatesOfBot.start_state.set()

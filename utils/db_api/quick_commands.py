@@ -4,9 +4,11 @@ from utils.db_api.db_gino import db
 from utils.db_api.schemas.user import User
 
 
-async def add_user(id: int, name: str, name_group: str = None, email: str = None, mailing_time: str = None):
+async def add_user(id: int, name: str, name_group: str = None, email: str = None, mailing_time: str = None,
+                   teacher: str = None):
     try:
-        user = User(id=id, name=name, name_group=name_group, email=email, mailing_time=mailing_time)
+        user = User(id=id, name=name, name_group=name_group, email=email, mailing_time=mailing_time, teacher=teacher,
+                    )
         await user.create()
 
     except UniqueViolationError:  # Если два уникальных ключа
@@ -41,6 +43,16 @@ async def delete_user_name_group(id):
 async def update_user_email(id, email):
     user = await User.get(id)
     await user.update(email=email).apply()
+
+
+async def update_user_teacher(id, teacher):
+    user = await User.get(id)
+    await user.update(teacher=teacher).apply()
+
+
+async def delete_user_teacher(id):
+    user = await User.get(id)
+    await user.update(teacher=None).apply()
 
 
 async def update_user_mailing_time(id, mailing_time):

@@ -55,6 +55,12 @@ chmod 600 /путь к ключу/
 scp -i /путь к ключу/ -r /путь к ScheduleBotTelegram (эту директорию будем копировать на сервер)/ ubuntu@ip инстанса:/home/ubuntu 
 ```
 > /home/ubuntu - директория на сервере, куда будут скопированы файлы бота
+> После копирования выглядеть будет так: /home/ubuntu/ScheduleBotTelegram
+6. Измените пути к файлам name_groups.txt и key.json вот так:
+```
+file_name_group = open("/src/data/name_groups.txt")
+```
+> То же самое и для ключа. То есть вместо ```/home/ubuntu/PycharmProjects/ScheduleBotTelegram/``` мы пишем ```/src/```
 
 
 

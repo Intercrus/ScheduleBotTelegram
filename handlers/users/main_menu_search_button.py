@@ -1,4 +1,3 @@
-
 import re
 from datetime import date, datetime, timedelta
 from aiogram.types import Message, CallbackQuery
@@ -44,47 +43,61 @@ async def search_timetable_by_specific_day(message: Message, state: FSMContext):
 
     try:
         data = await get_data_from_google(data_today)
-        timetable = await find_timetable_by_group(data, group_name)
         reformat_data = re.sub('^\s+|\n|\r|\s+$', '- ', data[0][0])
-        time_lessons = ["0", "08:30 - 09:50", "10:00-11:20",
-                        "11:30 - 12:50", "13:20 - 14:40",
-                        "14:50 - 16:10", "16:20 - 17:40", "17:50 - 19:10"]
-        reformat_timetable = timetable.split("\n")
-        div_info_lesson = []
 
-        for i in reformat_timetable:
+        if user.name_group != 'None':
+            timetable = await find_timetable_by_group(data, group_name)
+            time_lessons = ["0", "08:30 - 09:50", "10:00-11:20",
+                            "11:30 - 12:50", "13:20 - 14:40",
+                            "14:50 - 16:10", "16:20 - 17:40", "17:50 - 19:10"]
+            reformat_timetable = timetable.split("\n")
+            div_info_lesson = []
 
-            try:
+            for i in reformat_timetable:
+
                 try:
-                    name_teacher = re.search(
-                        r"\s([А-Я](.)*\s[А-Я][А-Я][,](.)*\s[А-Я][А-Я]|[А-Я](.)*\s[А-Я][А-Я]\s|\s[А-Я]......\s[А-Я][А-Я]|\s[А-Я].......\s[А-Я][А-Я])",
-                        i).group(0)
-                    name_teacher_format = re.search(
-                        r"[А-Я][а-я](.)*\s[А-Я][А-Я]|[А-Я][а-я](.)*\s[А-Я][А-Я][,][А-Я](.)*\s[А-Я][А-Я]",
-                        name_teacher).group(0)
+                    try:
+                        name_teacher = re.search(
+                            r"\s([А-Я](.)*\s[А-Я][А-Я][,](.)*\s[А-Я][А-Я]|[А-Я](.)*\s[А-Я][А-Я]\s|\s[А-Я]......\s[А-Я][А-Я]|\s[А-Я].......\s[А-Я][А-Я])",
+                            i).group(0)
+                        name_teacher_format = re.search(
+                            r"[А-Я][а-я](.)*\s[А-Я][А-Я]|[А-Я][а-я](.)*\s[А-Я][А-Я][,][А-Я](.)*\s[А-Я][А-Я]",
+                            name_teacher).group(0)
+                    except AttributeError:
+                        name_teacher_format = ""
+                    lesson = re.search(r"[0-9].[А-Я](.){18}\s|[0-9].[А-Я][А-Я]\s\d\d", i).group(0)
+
+                    if name_teacher_format.strip() == "Маликина АВ" or name_teacher_format.strip() == "Ольшина ТА":
+                        cabinet = "-"
+                    else:
+                        cabinet = re.search(
+                            r"\s\s(\d\d[а-я]|[А-Я][А-Я]|\d\d/\d\d|\d\d|\d|(\bакт)\s(\bзал)|\s\sдист\s\s)", i).group(0)
+
+                    number_of_lesson = re.search(r"[0-9]", i).group(0)
+
+                    div_info_lesson.append(
+                        f"🕗 {time_lessons[int(number_of_lesson)]} 🕗\n 📖{lesson[2:].lstrip()}\n 🚪{cabinet.lstrip()}\n 👤{name_teacher_format.lstrip()}\n")
                 except AttributeError:
-                    name_teacher_format = ""
-                lesson = re.search(r"[0-9].[А-Я](.){18}\s|[0-9].[А-Я][А-Я]\s\d\d", i).group(0)
+                    div_info_lesson.append(timetable)
+                    break
 
-                if name_teacher_format.strip() == "Маликина АВ" or name_teacher_format.strip() == "Ольшина ТА":
-                    cabinet = "-"
-                else:
-                    cabinet = re.search(
-                        r"\s\s(\d\d[а-я]|[А-Я][А-Я]|\d\d/\d\d|\d\d|\d|(\bакт)\s(\bзал)|\s\sдист\s\s)", i).group(0)
+            new_line_n = "\n"
+            await message.answer(f"📅 {reformat_data.title()}\n\n"
+                                 f"{f'{new_line_n}'.join(div_info_lesson)}")
 
-                number_of_lesson = re.search(r"[0-9]", i).group(0)
+            await state.finish()
+        else:
 
-                div_info_lesson.append(
-                    f"🕗 {time_lessons[int(number_of_lesson)]} 🕗\n 📖{lesson[2:].lstrip()}\n 🚪{cabinet.lstrip()}\n 👤{name_teacher_format.lstrip()}\n")
-            except AttributeError:
-                div_info_lesson.append(timetable)
-                break
+            timetable = await find_timetable_by_teacher(data, user.teacher)
 
-        new_line_n = "\n"
-        await message.answer(f"📅 {reformat_data.title()}\n\n"
-                             f"{f'{new_line_n}'.join(div_info_lesson)}")
+            msg = f"📅 {reformat_data.title()}\n\n"
+            for elem in timetable:
+                msg += ' '.join(elem) + '\n'
 
-        await state.finish()
+            await message.answer(msg)
+            await state.finish()
+
+
     except HttpError:
         name_day = data_today.strftime("%A")
         format_data = data_today.strftime("%d.%m.%y")
@@ -120,6 +133,12 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
                         "14:50 - 16:10", "16:20 - 17:40", "17:50 - 19:10"]
         timetable = await find_timetable_by_teacher(data, message.text)
         reformat_timetable = sorted(timetable)
+
+        group_names = []
+
+        for item in reformat_timetable:
+            group_names.append(item.pop(-1))
+
         reformat_timetable_2 = [item for sublist in reformat_timetable for item in sublist]
 
         def concatenation_of_two_strings(elem):
@@ -129,6 +148,7 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
         reformat_timetable_3 = list(concatenation_of_two_strings(reformat_timetable_2))
         div_info_lesson = []
 
+        count_group = -1
         if not timetable:
             await message.answer('Ничего не найдено')
             await state.finish()
@@ -143,12 +163,13 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
                         r"\s\s(\d\d[а-я]|[А-Я][А-Я]|\d\d/\d\d|\d\d|(\bакт)(\bзал)|дист|\d)", i).group(0)
                 number_of_lesson = re.search(r"[0-9]", i).group(0)
 
+                count_group += 1
                 div_info_lesson.append(
-                    f"🕗 {time_lessons[int(number_of_lesson)]} 🕗\n 📖{lesson[2:].lstrip()}\n 🚪{cabinet.lstrip()}\n 👤{message.text.lstrip()}\n")
+                    f"🕗 {time_lessons[int(number_of_lesson)]} 🕗\n 📖{lesson[2:].lstrip()}\n 🚪{cabinet.lstrip()}\n 👥{group_names[count_group]}\n 🧑‍🏫{message.text.lstrip()}\n")
 
             new_line_n = "\n"
             await message.answer(f"📅 {reformat_data.title()}\n\n"
-                                 f"{f'{new_line_n}'.join(div_info_lesson)}")
+                                 f"{f'{new_line_n}'.join(div_info_lesson)}\n\n")
             await state.finish()
 
     except HttpError:
@@ -166,7 +187,6 @@ async def search_timetable_by_teacher(message: Message, state: FSMContext):
 
     except IndexError:
         await state.finish()
-
 
 
 @dp.callback_query_handler(text_contains="schedule_for_group")

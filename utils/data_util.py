@@ -57,7 +57,7 @@ async def get_data_from_google(target_date):
         if int(target_date.day) == int(key):
             spreadsheets_id = dict_of_schedule[key][39:83]
 
-    CREDENTIALS_FILE = "/home/alien/PycharmProjects/ScheduleBotTelegram/data/CDED12.json"
+    CREDENTIALS_FILE = "/src/data/CDED12.json"
 
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
         CREDENTIALS_FILE,
@@ -104,13 +104,24 @@ async def find_timetable_by_group(data, value):
             continue
 
 
+def define_group(data, idx):
+    global result
+    for i in reversed(range(idx)):
+        if re.search(r'^[1-4]{1}[А-Я]{1,3}$', data[i]) or re.search(r'^[1-3]{1}[А-Я]{2}-[1-4]{1}$', data[i]):
+            result = data[i]
+            break
+
+    return result
+
+
 # Находит расписание по имени препода
 async def find_timetable_by_teacher(data, value):
-    global lesson, cabinet
+    global lesson, cabinet, group_name
     out_data = []
     for item in data:
         for i in range(len(item)):
             if item[i].find(value) > -1:
+                group_name = define_group(item, i)
                 new_data = item[i].split('  ')
                 result = []
 
@@ -121,16 +132,19 @@ async def find_timetable_by_teacher(data, value):
                 if len(result) == 3:
 
                     if result[1].find(value) > -1:
-                        out_data.append([result[0], result[-1]])
+                        out_data.append([result[0], result[-1], group_name])
 
                     else:
-                        cabinet = ''
-                        if -1 < result[2].find(value) <= 5:  # result[2].find(value) > -1 and result[2].find(value) <= 5
-                            cabinet = result[1].split('/')[0]
-                        if result[2].find(value) > -1 and result[2].find(value) >= 5:
-                            cabinet = result[1].split('/')[1]
+                        if result[1].find('ДО') > -1:
+                            out_data.append([result[0], 'ДО', group_name])
+                        else:
+                            cabinet = ''
+                            if -1 < result[2].find(value) <= 5:  # result[2].find(value) > -1 and result[2].find(value) <= 5
+                                cabinet = result[1].split('/')[0]
+                            if result[2].find(value) > -1 and result[2].find(value) >= 5:
+                                cabinet = result[1].split('/')[1]
 
-                        out_data.append([result[0], cabinet])
+                            out_data.append([result[0], cabinet, group_name])
 
                 if len(result) == 2:
                     if result[1].find(',') > -1:
@@ -146,13 +160,13 @@ async def find_timetable_by_teacher(data, value):
                             lesson = src[1]
                             cabinet = cabs[1]
 
-                        out_data.append([lesson, cabinet])  # global
+                        out_data.append([lesson, cabinet, group_name])  # global
                     else:
-                        out_data.append([result[0]])
+                        out_data.append([result[0], group_name])
 
                 if len(result) == 1:
                     cabinet = item[i + 1]
                     lesson = item[i - 3] + item[i - 2] + item[i - 1]
-                    out_data.append([lesson, cabinet])
-
+                    out_data.append([lesson, cabinet, group_name])
+    
     return out_data

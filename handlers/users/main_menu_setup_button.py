@@ -8,6 +8,7 @@ from keyboards.inline.setup_button_inline import setup_button
 from utils.db_api import quick_commands as commands
 from utils.misc import rate_limit
 from keyboards.inline.cancel_button_inline import cancel_button
+from keyboards.default.choice_stud_or_teach_kb import choice_kb
 
 
 @rate_limit(limit=5)
@@ -59,16 +60,13 @@ async def reset_settings(call: CallbackQuery, state: FSMContext):
     await call.answer(cache_time=60)
     await bot.delete_message(message_id=call.message.message_id,
                              chat_id=call.message.chat.id)
-    await call.message.answer("Настройки группы и подписки сброшены")
-    await call.message.answer(f'Здравствуйте, {call.message.chat.full_name}!\n'
-                              f'Введите название вашей группы, скопировав из списка\n'
-                              f'Например: 2ИС-2', reply_markup=ReplyKeyboardRemove())
-
-    file_name_group = open('/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt')
-    await bot.send_document(chat_id=call.message.chat.id, document=file_name_group)
-    file_name_group.close()
 
     await commands.delete_user_teacher(id=call.message.chat.id)
     await commands.delete_user_name_group(id=call.message.chat.id)
     await commands.delete_user_mailing_time(id=call.message.chat.id)
+
+    await call.message.answer("Настройки группы и подписки сброшены")
+    await call.message.answer(f'👋 Здравствуйте, {call.message.chat.full_name}!\n'
+                              f'Кем вы являетесь?', reply_markup=choice_kb)
+
     await StatesOfBot.start_state.set()

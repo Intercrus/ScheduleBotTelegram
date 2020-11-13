@@ -17,7 +17,7 @@ async def command_start(message: types.Message, state: FSMContext):
         f'Введите название вашей группы, скопировав из списка\n'
         f'Например: 2ИС-2', reply_markup=ReplyKeyboardRemove())
 
-    file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt")
+    file_name_group = open("/src/data/name_groups.txt")
     await bot.send_document(chat_id=message.chat.id, document=file_name_group)
     file_name_group.close()
 
@@ -34,7 +34,7 @@ async def command_start(message: types.Message, state: FSMContext):
         f'Введите ваше ФИО, скопировав из списка\n'
         f'Например: Опуховская АА', reply_markup=ReplyKeyboardRemove())
 
-    file_name_group = open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_teachers.txt")
+    file_name_group = open("/src/data/name_teachers.txt")
     await bot.send_document(chat_id=message.chat.id, document=file_name_group)
     file_name_group.close()
 
@@ -45,7 +45,7 @@ async def command_start(message: types.Message, state: FSMContext):
 async def search_groups(message: Message, state: FSMContext):
     data_file, none_list, acc_list = [], [], []
 
-    with open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_groups.txt", 'r') as read_file:
+    with open("/src/data/name_groups.txt", 'r') as read_file:
         for line in read_file:
             data_file.append(line.strip('\n'))
 
@@ -78,7 +78,7 @@ async def search_groups(message: Message, state: FSMContext):
 async def search_groups(message: Message, state: FSMContext):
     data_file, none_list, acc_list = [], [], []
 
-    with open("/home/alien/PycharmProjects/ScheduleBotTelegram/data/name_teachers.txt", 'r') as read_file:
+    with open("/src/data/name_teachers.txt", 'r') as read_file:
         for line in read_file:
             data_file.append(line.strip('\n'))
 

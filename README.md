@@ -5,7 +5,7 @@
 
 ## Демо
 
-![demo](https://github.com/Intercrus/ScheduleBotTelegram/blob/master/Peek%202020-11-12%2001-01.gif)
+![demo](https://github.com/Intercrus/ScheduleBotTelegram/blob/master/demo.gif)
 
 ## Начало работы
 

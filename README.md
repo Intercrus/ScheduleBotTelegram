@@ -149,7 +149,7 @@ sudo docker-compose up
 │   │   └── quick_commands.py                              # Функции для работы с базой данных (например обновление названия группы для пользователя)
 │   └── misc                                
 │   │   ├── __init__.py
-│   │   └── logging.py                                     # Логгирование                                      
+│   │   └── logging.py                                     # Логирование                                      
 │   │   └── throttling.py                                  # Функция rate_limit для троттлинга 
 │   └── redis                                              # Константы для работы с redis
 │   │   ├── __init__.py                                    

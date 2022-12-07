@@ -1,7 +1,8 @@
 # ScheduleBotTelegram
 > Бот для Telegram, который отправляет расписание пар Петрозаводского кооперативного техникума.
 > Бот написан на Python с использованием библиотеки aiogram и базы данных PostgreSQL.
-> Данного бота можно добавить к себе в телеграм, перейдя по ссылке: [@PKTK_schedule_bot](http://telegram.me/PKTK_schedule_bot)
+
+Проект устарел. Новая версия доступна ![здесь](https://github.com/Intercrus/pkt-schedule-bot)
 
 ## Демо
 

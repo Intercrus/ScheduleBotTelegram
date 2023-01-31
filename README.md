@@ -2,7 +2,7 @@
 > Бот для Telegram, который отправляет расписание пар Петрозаводского кооперативного техникума.
 > Бот написан на Python с использованием библиотеки aiogram и базы данных PostgreSQL.
 
-**Проект устарел. Новая версия доступна** [здесь](https://github.com/Intercrus/pkt-schedule-bot)
+**Проект устарел. Новый бот по ссылке @pkt_schedule_bot. Код будет ** [здесь](https://github.com/Intercrus/pkt-schedule-bot)
 
 ## Демо
 
